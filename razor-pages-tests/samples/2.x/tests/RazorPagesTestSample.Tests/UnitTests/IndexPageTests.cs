@@ -25,29 +25,22 @@ namespace RazorPagesTestSample.Tests.UnitTests
             // Arrange
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
-            #region snippet1
             var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
             var expectedMessages = AppDbContext.GetSeedingMessages();
             mockAppDbContext.Setup(
                 db => db.GetMessagesAsync()).Returns(Task.FromResult(expectedMessages));
             var pageModel = new IndexModel(mockAppDbContext.Object);
-            #endregion
 
-            #region snippet2
             // Act
             await pageModel.OnGetAsync();
-            #endregion
 
-            #region snippet3
             // Assert
             var actualMessages = Assert.IsAssignableFrom<List<Message>>(pageModel.Messages);
             Assert.Equal(
                 expectedMessages.OrderBy(m => m.Id).Select(m => m.Text), 
                 actualMessages.OrderBy(m => m.Id).Select(m => m.Text));
-            #endregion
         }
 
-        #region snippet4
         [Fact]
         public async Task OnPostAddMessageAsync_ReturnsAPageResult_WhenModelStateIsInvalid()
         {
@@ -81,7 +74,6 @@ namespace RazorPagesTestSample.Tests.UnitTests
             // Assert
             Assert.IsType<PageResult>(result);
         }
-        #endregion
 
         [Fact]
         public async Task OnPostAddMessageAsync_ReturnsARedirectToPageResult_WhenModelStateIsValid()

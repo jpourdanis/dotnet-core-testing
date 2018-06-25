@@ -13,7 +13,6 @@ using RazorPagesProject.Tests.Helpers;
 
 namespace RazorPagesProject.Tests
 {
-    #region snippet1
     public class IndexPageTests : IClassFixture<CustomWebApplicationFactory<RazorPagesProject.Startup>>
     {
         private readonly HttpClient _client;
@@ -28,9 +27,7 @@ namespace RazorPagesProject.Tests
                 });
             _factory = factory;
         }
-        #endregion
 
-        #region snippet2
         [Fact]
         public async Task Post_DeleteAllMessagesHandler_ReturnsRedirectToRoot()
         {
@@ -48,9 +45,7 @@ namespace RazorPagesProject.Tests
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
             Assert.Equal("/", response.Headers.Location.OriginalString);
         }
-        #endregion
 
-        #region snippet3
         [Fact]
         public async Task Post_DeleteMessageHandler_ReturnsRedirectToRoot()
         {
@@ -99,7 +94,6 @@ namespace RazorPagesProject.Tests
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
             Assert.Equal("/", response.Headers.Location.OriginalString);
         }
-        #endregion
 
         [Fact]
         public async Task Post_AddMessageHandler_ReturnsRedirectToRoot()
