@@ -24,12 +24,10 @@ namespace RazorPagesTestSample.Pages
         [TempData]
         public string MessageAnalysisResult { get; set; }
 
-        #region snippet1
         public async Task OnGetAsync()
         {
             Messages = await _db.GetMessagesAsync();
         }
-        #endregion
 
         public async Task<IActionResult> OnPostAddMessageAsync()
         {

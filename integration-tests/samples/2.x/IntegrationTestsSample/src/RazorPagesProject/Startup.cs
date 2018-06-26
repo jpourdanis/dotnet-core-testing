@@ -38,14 +38,12 @@ namespace RazorPagesProject
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            #region snippet1
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddRazorPagesOptions(options =>
                 {
                     options.Conventions.AuthorizePage("/SecurePage");
                 });
-            #endregion
 
                 services.AddHttpClient<IGithubClient, GithubClient>(client =>
                 {
