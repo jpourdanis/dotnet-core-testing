@@ -8,10 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using RazorPagesProject.Services;
 using RazorPagesProject.Tests.Helpers;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System;
 
 namespace RazorPagesProject.Tests.IntegrationTests
 {
-    #region snippet1
     public class BasicTests 
         : IClassFixture<WebApplicationFactory<RazorPagesProject.Startup>>
     {
@@ -20,6 +22,25 @@ namespace RazorPagesProject.Tests.IntegrationTests
         public BasicTests(WebApplicationFactory<RazorPagesProject.Startup> factory)
         {
             _factory = factory;
+        }
+
+        [Theory]
+        [InlineData("ypourdanis", "John Pourdanis")]
+        [InlineData("pavkout", "Pavlos Koutoglou")]
+        [InlineData("ziaziosk", "Ziazios Konstantinos")]
+        public async Task CanGetGithubClientApi(string username, string fullName)
+        {
+            // Arrange
+            var _client = new HttpClient();
+            _client.BaseAddress = new Uri("https://api.github.com");
+            _client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Yolo", "0.1.0"));
+            var _githubClient = new GithubClient(_client);
+
+            // Act
+            var response = await _githubClient.GetUserAsync(username);
+
+            // Assert
+            Assert.Equal(response.Name, fullName);
         }
 
         [Theory]
@@ -41,9 +62,9 @@ namespace RazorPagesProject.Tests.IntegrationTests
             Assert.Equal("text/html; charset=utf-8", 
                 response.Content.Headers.ContentType.ToString());
         }
-    #endregion
 
-        #region snippet2
+
+
         [Fact]
         public async Task Get_SecurePageRequiresAnAuthenticatedUser()
         {
@@ -62,9 +83,7 @@ namespace RazorPagesProject.Tests.IntegrationTests
             Assert.StartsWith("http://localhost/Identity/Account/Login", 
                 response.Headers.Location.OriginalString);
         }
-        #endregion
 
-        #region snippet3
         [Fact]
         public async Task CanGetAGithubUser()
         {
@@ -113,6 +132,5 @@ namespace RazorPagesProject.Tests.IntegrationTests
                 }
             }
         }
-        #endregion
     }
 }
