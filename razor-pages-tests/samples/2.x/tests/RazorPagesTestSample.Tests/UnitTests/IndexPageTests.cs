@@ -42,6 +42,58 @@ namespace RazorPagesTestSample.Tests.UnitTests
         }
 
         [Fact]
+        public async Task OnPostDeleteAllMessagesAsync_ReturnsARedirectToPageResult()
+        {
+            // Arrange
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase("InMemoryDb");
+            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
+            var pageModel = new IndexModel(mockAppDbContext.Object);
+
+            // Act
+            var result = await pageModel.OnPostDeleteAllMessagesAsync();
+
+            // Assert
+            Assert.IsType<RedirectToPageResult>(result);
+        }
+
+        [Fact]
+        public async Task OnPostDeleteMessageAsync_ReturnsARedirectToPageResult()
+        {
+            // Arrange
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase("InMemoryDb");
+            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
+            var pageModel = new IndexModel(mockAppDbContext.Object);
+            var recId = 1;
+
+            // Act
+            var result = await pageModel.OnPostDeleteMessageAsync(recId);
+
+            // Assert
+            Assert.IsType<RedirectToPageResult>(result);
+        }
+
+        [Fact]
+        public async Task OnPostAnalyzeMessagesAsync_ReturnsARedirectToPageResultWithCorrectAnalysis_WhenNoMessagesArePresent()
+        {
+            // Arrange
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase("InMemoryDb");
+            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
+            mockAppDbContext.Setup(db => db.GetMessagesAsync()).Returns(Task.FromResult(new List<Message>()));
+            var pageModel = new IndexModel(mockAppDbContext.Object);
+            var expectedMessageAnalysisResultString = "There are no messages to analyze.";
+
+            // Act
+            var result = await pageModel.OnPostAnalyzeMessagesAsync();
+
+            // Assert
+            Assert.IsType<RedirectToPageResult>(result);
+            Assert.Equal(expectedMessageAnalysisResultString, pageModel.MessageAnalysisResult);
+        }
+
+        [Fact]
         public async Task OnPostAddMessageAsync_ReturnsAPageResult_WhenModelStateIsInvalid()
         {
             // Arrange
@@ -110,39 +162,6 @@ namespace RazorPagesTestSample.Tests.UnitTests
         }
 
         [Fact]
-        public async Task OnPostDeleteAllMessagesAsync_ReturnsARedirectToPageResult()
-        {
-            // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("InMemoryDb");
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var pageModel = new IndexModel(mockAppDbContext.Object);
-
-            // Act
-            var result = await pageModel.OnPostDeleteAllMessagesAsync();
-
-            // Assert
-            Assert.IsType<RedirectToPageResult>(result);
-        }
-
-        [Fact]
-        public async Task OnPostDeleteMessageAsync_ReturnsARedirectToPageResult()
-        {
-            // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("InMemoryDb");
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var pageModel = new IndexModel(mockAppDbContext.Object);
-            var recId = 1;
-
-            // Act
-            var result = await pageModel.OnPostDeleteMessageAsync(recId);
-
-            // Assert
-            Assert.IsType<RedirectToPageResult>(result);
-        }
-
-        [Fact]
         public async Task OnPostAnalyzeMessagesAsync_ReturnsARedirectToPageResultWithCorrectAnalysis_WhenMessagesArePresent()
         {
             // Arrange
@@ -170,23 +189,6 @@ namespace RazorPagesTestSample.Tests.UnitTests
             Assert.Equal(expectedMessageAnalysisResultString, pageModel.MessageAnalysisResult);
         }
 
-        [Fact]
-        public async Task OnPostAnalyzeMessagesAsync_ReturnsARedirectToPageResultWithCorrectAnalysis_WhenNoMessagesArePresent()
-        {
-            // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("InMemoryDb");
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            mockAppDbContext.Setup(db => db.GetMessagesAsync()).Returns(Task.FromResult(new List<Message>()));
-            var pageModel = new IndexModel(mockAppDbContext.Object);
-            var expectedMessageAnalysisResultString = "There are no messages to analyze.";
 
-            // Act
-            var result = await pageModel.OnPostAnalyzeMessagesAsync();
-
-            // Assert
-            Assert.IsType<RedirectToPageResult>(result);
-            Assert.Equal(expectedMessageAnalysisResultString, pageModel.MessageAnalysisResult);
-        }
     }
 }
