@@ -5,7 +5,8 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
+using RazorPagesProject.e2eTests.Pages;
 
 namespace RazorPagesProject.e2eTests
 {
@@ -21,26 +22,37 @@ namespace RazorPagesProject.e2eTests
            {
                webDriver = new OpenQA.Selenium.Chrome.ChromeDriver(chromeDriverDirectory: @"/Users/user/Desktop/Test Files/Meetup/dotnet-core-testing/integration-tests/samples/2.x/IntegrationTestsSample/tests/RazorPagesProject.e2eTests/WebDrivers/MacOS");
            }
-           if (OperatingSystem.isLinux())
+           if (OperatingSystem.IsLinux())
            {
                webDriver = new OpenQA.Selenium.Chrome.ChromeDriver(chromeDriverDirectory: @"/Users/user/Desktop/Test Files/Meetup/dotnet-core-testing/integration-tests/samples/2.x/IntegrationTestsSample/tests/RazorPagesProject.e2eTests/WebDrivers/Linux");
            }
-           if (OperatingSystem.isLinux())
+           if (OperatingSystem.IsWindows())
            {
                webDriver = new OpenQA.Selenium.Chrome.ChromeDriver(chromeDriverDirectory: @"/Users/user/Desktop/Test Files/Meetup/dotnet-core-testing/integration-tests/samples/2.x/IntegrationTestsSample/tests/RazorPagesProject.e2eTests/WebDrivers/Windows/");
            }
         }
-
         public void Dispose()
         {
             webDriver.Dispose();
         }
 
         [Fact]
-        public void TestWithFirefoxDriver()
+        public void TestWithChromeDriver()
         {
 
            webDriver.Navigate().GoToUrl(baseUrl);
+
+           var homePage = new HomePage(webDriver);
+
+           var message = "This is a test";
+
+           Thread.Sleep(5000);
+
+           homePage.AddMessage(message);
+
+           Thread.Sleep(10000);
+
+           Assert.True(homePage.IsMessageAppearToList(message));
 
            webDriver.Quit();
 
