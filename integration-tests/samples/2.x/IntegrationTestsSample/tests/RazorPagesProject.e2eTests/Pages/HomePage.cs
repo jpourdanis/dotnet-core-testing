@@ -20,7 +20,9 @@ namespace RazorPagesProject.e2eTests.Pages
 
         private IWebElement DeleteAllButton;
 
-        private IWebElement FirstMessage;
+        private IWebElement FirstMessageOnList;
+
+        private IWebElement MessagesPanel;
 
         //Actions
 
@@ -37,9 +39,9 @@ namespace RazorPagesProject.e2eTests.Pages
 
         public bool IsMessageAppearToList(string message)
         {
-            FirstMessage = _WebDriver.FindElement(By.XPath("//*[@id=\"messages\"]/div/div[2]/ul/li[1]"));
+            FirstMessageOnList = _WebDriver.FindElement(By.XPath("//*[@id=\"messages\"]/div/div[2]/ul/li[1]"));
 
-            return FirstMessage.Text.Contains(message);
+            return FirstMessageOnList.Text.Contains(message);
         }
 
         public void DeleteAllMessages()
@@ -47,6 +49,13 @@ namespace RazorPagesProject.e2eTests.Pages
             DeleteAllButton = _WebDriver.FindElement(By.Id("deleteAllBtn"));
 
             DeleteAllButton.Click();
+        }
+
+        public bool IsMessagesListEmpty()
+        {
+            MessagesPanel = _WebDriver.FindElement(By.XPath("//*[@id=\"messages\"]/div/div[2]"));
+
+            return MessagesPanel.Text.Contains("");
         }
     }
 }

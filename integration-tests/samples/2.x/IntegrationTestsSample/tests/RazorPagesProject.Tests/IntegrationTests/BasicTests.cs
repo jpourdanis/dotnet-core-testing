@@ -28,7 +28,7 @@ namespace RazorPagesProject.Tests.IntegrationTests
         [InlineData("ypourdanis", "John Pourdanis")]
         [InlineData("pavkout", "Pavlos Koutoglou")]
         [InlineData("ziaziosk", "Ziazios Konstantinos")]
-        public async Task CanGetGithubClientApi(string username, string fullName)
+        public async Task CanGetUserAsyncFromGithubClientApi(string username, string fullName)
         {
             // Arrange
             var _client = new HttpClient();

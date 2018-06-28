@@ -1,7 +1,5 @@
 using Xunit;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +32,11 @@ namespace RazorPagesProject.e2eTests
         public void Dispose()
         {
             webDriver.Dispose();
+            webDriver.Quit();
         }
 
         [Fact]
-        public void TestWithChromeDriver()
+        public void CanAddMessageToListAndVerify()
         {
 
            webDriver.Navigate().GoToUrl(baseUrl);
@@ -54,7 +53,23 @@ namespace RazorPagesProject.e2eTests
 
            Assert.True(homePage.IsMessageAppearToList(message));
 
-           webDriver.Quit();
+        }
+
+        [Fact]
+        public void CanDeleteAllMessagesAndVerify()
+        {
+
+           webDriver.Navigate().GoToUrl(baseUrl);
+
+           var homePage = new HomePage(webDriver);
+
+           Thread.Sleep(5000);
+
+           homePage.DeleteAllMessages();
+
+           Thread.Sleep(10000);
+
+           Assert.True(homePage.IsMessagesListEmpty());
 
         }
     }
